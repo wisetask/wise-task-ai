@@ -1,0 +1,116 @@
+syntax = "proto3";
+
+package ru.leti.wise.task.task;
+
+import "graph.proto";
+import "plugin.proto";
+
+// Task
+enum TaskType {
+  GRAPH = 0;
+  IMPLEMENTATION = 1;
+}
+
+message Task {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  string category = 4;
+  TaskType task_type = 5;
+  string author_id = 6;
+  bool is_public = 7;
+  oneof task_detail {
+    TaskImplementation task_implementation = 8;
+    TaskGraph task_graph = 9;
+  }
+}
+
+message TaskImplementation {
+  string plugin_id = 1;
+}
+
+message TaskGraph {
+  bool is_hidden_mistake = 1;
+  ru.leti.wise.task.graph.Graph graph = 2;
+  Rule rule = 3;
+  repeated PluginInfo condition = 4;
+}
+
+message PluginInfo {
+  string plugin_id = 1;
+  string value = 2;
+  string mistake_text = 3;
+  string sign = 4;
+  PluginType plugin_type = 5;
+  int32 order = 6;
+}
+
+message Rule {
+  bool is_color = 1;
+  bool is_edit = 2;
+  bool is_move = 3;
+  bool is_delete = 4;
+}
+
+enum PluginType {
+  GRAPH_PROPERTY = 0;
+  GRAPH_CHARACTERISTIC = 1;
+  GRAPH_NEW_GRAPH = 2;
+  GRAPH_STRING = 3;
+}
+//-----------------------------------------------------------
+
+// Solution
+message Solution {
+  string id = 1;
+  string task_id = 2;
+  string author_id = 3;
+  bool is_correct = 4;
+  oneof solution_details {
+    SolutionGraph solution_graph = 5;
+    SolutionImplementation solution_implementation = 6;
+  }
+}
+
+message SolutionGraph {
+  ru.leti.wise.task.graph.Graph graph = 1;
+  repeated PluginResult plugin_results = 2;
+  repeated PluginStringInput plugin_string_result = 3;
+}
+
+message PluginStringInput {
+  string plugin_id = 1;
+  string hand_written_answer = 2;
+}
+
+message PluginResult {
+  string plugin_id = 1;
+  bool is_correct = 2;
+  string value = 3;
+  string true_value = 4;
+  string pluginMessage = 5;
+}
+
+message SolutionImplementation {
+  string code = 1;
+  repeated GraphResult implementation_result = 2;
+}
+
+message GraphResult {
+  string id = 1;
+  double original_time_result = 2;
+  double time_result = 3;
+  string original_result = 4;
+  string result = 5;
+}
+//-----------------------------------------------------------
+
+// Solution
+message Catalog {
+  string id = 1;
+  string name = 2;
+  string catalog = 3;
+  string author_id = 4;
+  repeated string student_ids = 5;
+  repeated string task_ids = 6;
+}

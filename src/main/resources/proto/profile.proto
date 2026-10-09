@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package ru.leti.wise.task.profile;
+
+enum Role {
+  USER = 0;
+  AUTHOR = 1;
+  ADMIN = 2;
+}
+
+message Profile {
+  string id = 1;
+  string email = 2;
+  string profile_password = 3;
+  string first_name = 4;
+  string last_name = 5;
+  string patronymic = 6;
+  Role profile_role = 7;
+}
+
+message ProfileStatistic {
+  int32 task_count = 1;
+  int32 correctly_solved_number = 2;
+  int32 wrong_solved_number = 3;
+}

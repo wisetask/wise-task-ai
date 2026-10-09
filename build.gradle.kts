@@ -36,11 +36,23 @@ dependencyManagement {
         mavenBom("org.springframework.ai:spring-ai-bom:${property("springAiVersion")}")
     }
 }
-
+sourceSets {
+    main {
+        proto {
+            srcDir("src/main/resources/proto")
+        }
+    }
+}
 kotlin {
     jvmToolchain(25)
     compilerOptions {
         freeCompilerArgs.addAll("-Xjsr305=strict", "-Xannotation-default-target=param-property")
+    }
+}
+
+protobuf {
+    plugins {
+        create("grpc")   // ← вот это и есть opt-in
     }
 }
 

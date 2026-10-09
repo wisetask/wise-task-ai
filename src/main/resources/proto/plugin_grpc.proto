@@ -1,0 +1,104 @@
+syntax = "proto3";
+
+package ru.leti.wise.task.plugin;
+
+import "plugin.proto";
+import "pagination.proto";
+import "google/protobuf/empty.proto";
+
+service PluginService {
+  rpc GetAllPlugins (GetAllPluginRequest) returns (GetAllPluginsResponse);
+  rpc GetPluginsByIds(PluginIds) returns (GetPluginsByIdsResponse);
+  rpc CreatePlugin (CreatePluginRequest) returns (CreatePluginResponse);
+  rpc GetPlugin (GetPluginRequest) returns (GetPluginResponse);
+  rpc UpdatePlugin (UpdatePluginRequest) returns (UpdatePluginResponse);
+  rpc DeletePlugin (DeletePluginRequest) returns (DeletePluginResponse);
+  rpc CheckPluginSolution (CheckPluginSolutionRequest) returns (CheckPluginSolutionResponse);
+  rpc CheckPluginImplementation (CheckPluginImplementationRequest) returns (CheckPluginImplementationResponse);
+  rpc ValidatePlugin (ValidatePluginRequest) returns (ValidatePluginResponse);
+}
+
+message PluginFilter {
+  optional string name = 1;
+  optional string description = 2;
+  optional string category = 3;
+  optional GraphType graph_type = 4;
+  optional bool is_valid = 5;
+  optional PluginType plugin_type = 6;
+  optional bool is_internal = 7;
+  optional string author_id = 9;
+}
+
+message GetAllPluginRequest {
+  ru.leti.wise.task.pagination.PaginationRequest pagination = 1;
+  PluginFilter filter = 2;
+}
+message GetAllPluginsResponse {
+  repeated Plugin items = 1;
+  ru.leti.wise.task.pagination.PaginationResponse pagination = 2;
+}
+
+message CreatePluginRequest {
+  Plugin plugin = 1;
+}
+
+message CreatePluginResponse {
+  Plugin plugin = 1;
+}
+
+message ValidatePluginRequest {
+  string id = 1;
+}
+
+message ValidatePluginResponse {
+  string id = 1;
+}
+
+message GetPluginRequest {
+  string id = 1;
+}
+
+message GetPluginResponse {
+  Plugin plugin = 1;
+}
+
+message UpdatePluginRequest {
+  Plugin plugin = 1;
+}
+
+message UpdatePluginResponse {
+  Plugin plugin = 1;
+}
+
+message DeletePluginRequest {
+  string id = 1;
+}
+
+message DeletePluginResponse {
+  string id = 1;
+}
+
+message CheckPluginSolutionRequest {
+  Solution solution = 1;
+}
+
+message CheckPluginSolutionResponse {
+  string result = 1;
+}
+
+message CheckPluginImplementationRequest {
+  string id = 1;
+  string file = 2;
+}
+
+message CheckPluginImplementationResponse {
+  ImplementationResult implementation_result = 1;
+}
+
+message PluginIds {
+  repeated string plugin_ids = 1;
+}
+
+message GetPluginsByIdsResponse {
+  repeated Plugin plugins = 1;
+}
