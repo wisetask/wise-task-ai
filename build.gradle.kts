@@ -21,12 +21,30 @@ repositories {
 }
 
 dependencies {
+    // AI
     implementation("org.springframework.ai:spring-ai-starter-mcp-server")
-    implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.ai:spring-ai-starter-model-deepseek")
+
+    // API
+    implementation("org.springframework.boot:spring-boot-starter-graphql")
+    implementation("org.springframework.boot:spring-boot-starter-websocket")
     implementation("org.springframework.boot:spring-boot-starter-grpc-client")
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
+
+    // DB
+    implementation("org.springframework.boot:spring-boot-starter-liquibase")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+
+    // Observability
     implementation("io.github.oshai:kotlin-logging-jvm:8.0.4")
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
+    implementation("org.springframework.boot:spring-boot-starter-opentelemetry")
+    implementation ("io.micrometer:micrometer-registry-prometheus")
+    implementation ("com.github.loki4j:loki-logback-appender:2.1.0")
+
+    // Util
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
+
+    // Test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation(kotlin("test"))
 }
@@ -52,7 +70,7 @@ kotlin {
 
 protobuf {
     plugins {
-        create("grpc")   // ← вот это и есть opt-in
+        create("grpc")
     }
 }
 

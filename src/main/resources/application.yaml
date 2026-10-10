@@ -2,3 +2,63 @@ spring:
   ai:
     deepseek:
       api-key: ${API_KEY}
+  threads:
+    virtual:
+      enabled: true
+  application:
+    name: wise-task-ai
+  datasource:
+    url: jdbc:postgresql://${DB:localhost}:5432/${AI_DB:wise_task_ai}
+    username: ${AI_DB_USER:wise_task_ai}
+    password: ${AI_DB_PASSWORD:wise_task_ai}
+    driver-class-name: org.postgresql.Driver
+    jpa:
+      generate-ddl: false
+      show-sql: true
+      properties:
+        hibernate:
+          format_sql: false
+
+grpc:
+  service:
+    graph:
+      host: ${GRAPH_GRPC_PORT:localhost}
+      port: ${GRAPH_GRPC_PORT:6565}
+    profile:
+      host: ${PROFILE_APP_NAME:localhost}
+      port: ${PROFILE_GRPC_PORT:6567}
+    plugin:
+      host: ${PLUGIN_APP_NAME:localhost}
+      port: ${PLUGIN_GRPC_PORT:6566}
+    task:
+      host: ${TASK_APP_NAME:localhost}
+      port: ${TASK_GRPC_PORT:6568}
+    statistics:
+      host: ${EVENT_APP_NAME:localhost}
+      port: ${EVENT_GRPC_PORT:6569}
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+  opentelemetry:
+    tracing:
+      export:
+        otlp:
+          endpoint: http://${TEMPO_HOST:localhost}:${TEMPO_PORT:4318}/v1/traces
+  otlp:
+    metrics:
+      export:
+        enabled: false
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,metrics
+  metrics:
+    tags:
+      application: ${spring.application.name}
+    distribution:
+      percentiles-histogram:
+        http:
+          server:
+            requests: true
