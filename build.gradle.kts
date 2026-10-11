@@ -24,6 +24,8 @@ dependencies {
     // AI
     implementation("org.springframework.ai:spring-ai-starter-mcp-server")
     implementation("org.springframework.ai:spring-ai-starter-model-deepseek")
+    implementation("org.springframework.ai:spring-ai-starter-vector-store-pgvector")
+    implementation("org.springframework.ai:spring-ai-rag")
 
     // API
     implementation("org.springframework.boot:spring-boot-starter-graphql")

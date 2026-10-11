@@ -28,5 +28,5 @@ class ChatEntity(
 
     @ManyToOne
     @JoinColumn(name = "chat")
-    val messages: List<ChatMessage> = mutableListOf()
+    val messages: List<MessageEntity> = mutableListOf()
 )
