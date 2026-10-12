@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="create-base-tables" author="magofrays">
+        <sql>
+            CREATE TABLE wise_task_ai.users (
+                id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+                email      VARCHAR(255) NOT NULL UNIQUE,
+                first_name VARCHAR(255),
+                last_name  VARCHAR(255)
+            );
+
+            CREATE TABLE wise_task_ai.chat (
+                id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+                created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                title      VARCHAR(255) NOT NULL,
+                user_id    UUID NOT NULL
+                    CONSTRAINT user_foreign_key
+                        REFERENCES wise_task_ai.users(id) ON DELETE CASCADE
+            );
+
+            CREATE TABLE wise_task_ai.chat_message (
+                id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+                role       VARCHAR(127) NOT NULL,
+                content    TEXT,
+                created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                chat_id    UUID NOT NULL
+                    CONSTRAINT chat_foreign_key
+                        REFERENCES wise_task_ai.chat(id) ON DELETE CASCADE
+            );
+
+            CREATE INDEX chat_message_chat_created_idx
+                ON wise_task_ai.chat_message (chat_id, created_at);
+
+            CREATE INDEX chat_user_created_idx
+                ON wise_task_ai.chat (user_id, created_at DESC);
+
+            CREATE TABLE wise_task_ai.loaded_document (
+                id            BIGSERIAL PRIMARY KEY,
+                filename      VARCHAR(255) NOT NULL,
+                content_hash  VARCHAR(64)  NOT NULL,
+                document_type VARCHAR(10)  NOT NULL,
+                chunk_count   INTEGER,
+                loaded_at     TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                CONSTRAINT unique_document UNIQUE (filename, content_hash)
+            );
+
+            CREATE INDEX idx_loaded_documents_filename
+                ON wise_task_ai.loaded_document(filename);
+
+            CREATE TABLE wise_task_ai.vector_store (
+                id        VARCHAR(255) PRIMARY KEY,
+                content   TEXT,
+                metadata  JSON,
+                embedding VECTOR(1024)
+            );
+
+            CREATE INDEX vector_store_hnsw_index
+                ON wise_task_ai.vector_store
+                USING hnsw (embedding vector_cosine_ops);
+        </sql>
+        <rollback>
+            DROP TABLE IF EXISTS wise_task_ai.vector_store;
+            DROP TABLE IF EXISTS wise_task_ai.loaded_document;
+            DROP TABLE IF EXISTS wise_task_ai.chat_message;
+            DROP TABLE IF EXISTS wise_task_ai.chat;
+            DROP TABLE IF EXISTS wise_task_ai.users;
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

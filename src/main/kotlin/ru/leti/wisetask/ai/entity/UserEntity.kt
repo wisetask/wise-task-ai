@@ -9,10 +9,11 @@ import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 import java.util.UUID
 
-@Table(name = "user")
+@Table(name = "users")
 class UserEntity(
     @GeneratedValue(strategy = GenerationType.UUID)
     val id: UUID? = null,
+
     val email: String,
 
     @Column(name = "first_name")

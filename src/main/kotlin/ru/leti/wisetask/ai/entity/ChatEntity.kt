@@ -9,6 +9,7 @@ import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
+import org.springframework.ai.chat.messages.Message
 import java.time.OffsetDateTime
 import java.util.UUID
 
@@ -19,8 +20,10 @@ class ChatEntity(
     @GeneratedValue(strategy = GenerationType.UUID)
     val id: UUID? = null,
 
+    val title: String,
+
     @Column(name = "created_at")
-    val createdAt: OffsetDateTime,
+    val createdAt: OffsetDateTime = OffsetDateTime.now(),
 
     @OneToMany
     @Column(name = "user_id")
@@ -28,5 +31,11 @@ class ChatEntity(
 
     @ManyToOne
     @JoinColumn(name = "chat")
-    val messages: List<MessageEntity> = mutableListOf()
-)
+    val history: MutableList<MessageEntity> = mutableListOf()
+
+){
+    fun addChatMessage(message: Message) {
+        history.add(message.toEtity())
+    }
+
+}
