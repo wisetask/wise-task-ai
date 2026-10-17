@@ -25,11 +25,14 @@ class ChatEntity(
     @Column(name = "created_at")
     val createdAt: OffsetDateTime = OffsetDateTime.now(),
 
-    @OneToMany
-    @Column(name = "user_id")
-    val user: UserEntity,
+    @Column(name = "updated_at")
+    val updatedAt: OffsetDateTime = OffsetDateTime.now(),
 
     @ManyToOne
+    @JoinColumn(name = "user_id")
+    val profile: ProfileEntity,
+
+    @OneToMany
     @JoinColumn(name = "chat")
     val history: MutableList<MessageEntity> = mutableListOf()
 

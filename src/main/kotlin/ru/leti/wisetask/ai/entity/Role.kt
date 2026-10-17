@@ -1,31 +1,39 @@
 package ru.leti.wisetask.ai.entity
 
-import org.springframework.ai.chat.messages.AssistantMessage
-import org.springframework.ai.chat.messages.Message
-import org.springframework.ai.chat.messages.SystemMessage
-import org.springframework.ai.chat.messages.UserMessage
+import org.springframework.ai.chat.messages.*
+import tools.jackson.module.kotlin.jsonMapper
+import tools.jackson.module.kotlin.kotlinModule
+
 
 enum class Role(
     val role: String
 ) {
     USER("user") {
-        override fun getMessage(content: String): UserMessage {
-            return UserMessage(content)
+        override fun getMessage(payload: String): UserMessage {
+            return UserMessage(payload)
         }
     },
     ASSISTANT("assistant") {
-        override fun getMessage(content: String): AssistantMessage {
-            return AssistantMessage(content)
+        override fun getMessage(payload: String): AssistantMessage {
+            return AssistantMessage(payload)
         }
     },
     SYSTEM("system") {
-        override fun getMessage(content: String): SystemMessage {
-            return SystemMessage(content)
+        override fun getMessage(payload: String): SystemMessage {
+            return SystemMessage(payload)
+        }
+    },
+    TOOL("tool"){
+        override fun getMessage(payload: String): ToolResponseMessage {
+            return objectMapper.readValue(payload, ToolResponseMessage::class.java)
         }
     };
 
-    abstract fun getMessage(content: String): Message
+    abstract fun getMessage(payload: String): Message
     companion object {
+        private val objectMapper = jsonMapper {
+            addModule(kotlinModule())
+        }
         fun getRole(roleName: String): Role =
             entries.first { it.role == roleName }
     }

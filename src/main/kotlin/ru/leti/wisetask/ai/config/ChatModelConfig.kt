@@ -12,12 +12,14 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.io.Resource
 import ru.leti.wisetask.ai.advisor.DbChatMemory
+import ru.leti.wisetask.ai.tools.PluginTools
 
 
 @Configuration
 class ChatModelConfig(
     private val vectorStore: VectorStore,
-    private val chatMemory: DbChatMemory
+    private val chatMemory: DbChatMemory,
+    private val pluginTools: PluginTools
 ) {
 
     @Bean
@@ -31,6 +33,7 @@ class ChatModelConfig(
                 AdvisorParams.ENABLE_NATIVE_STRUCTURED_OUTPUT.accept(spec)
                 spec.advisors(ragAdvisor(), historyAdvisor())
             }
+            .defaultTools(pluginTools)
             .build()
     }
 
@@ -52,6 +55,6 @@ class ChatModelConfig(
 
     @Bean
     fun historyAdvisor(): MessageChatMemoryAdvisor {
-        return MessageChatMemoryAdvisor.builder(chatMemory).build()
+        return MessageChatMemoryAdvisor.builder(chatMemory).order(0).build()
     }
 }

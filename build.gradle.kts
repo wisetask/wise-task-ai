@@ -4,6 +4,7 @@ plugins {
     id("org.springframework.boot") version "4.1.1"
     id("io.spring.dependency-management") version "1.1.7"
     id("com.google.protobuf") version "0.9.6"
+    id("com.netflix.dgs.codegen") version "8.6.0"
 }
 
 group = "ru.leti.wisetask.ai"
@@ -23,14 +24,13 @@ repositories {
 
 dependencies {
     // AI
-    implementation("org.springframework.ai:spring-ai-starter-mcp-server")
-    implementation("org.springframework.ai:spring-ai-starter-model-deepseek")
     implementation("org.springframework.ai:spring-ai-starter-vector-store-pgvector")
     implementation("org.springframework.ai:spring-ai-rag")
+    implementation("org.springframework.ai:spring-ai-starter-model-openai")
 
     // API
+    implementation("org.springframework.boot:spring-boot-starter-webmvc")
     implementation("org.springframework.boot:spring-boot-starter-graphql")
-    implementation("org.springframework.boot:spring-boot-starter-websocket")
     implementation("org.springframework.boot:spring-boot-starter-grpc-client")
 
     // DB
@@ -41,11 +41,13 @@ dependencies {
     implementation("io.github.oshai:kotlin-logging-jvm:8.0.4")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-opentelemetry")
-    implementation ("io.micrometer:micrometer-registry-prometheus")
-    implementation ("com.github.loki4j:loki-logback-appender:2.1.0")
+    implementation("io.micrometer:micrometer-registry-prometheus")
+    implementation("com.github.loki4j:loki-logback-appender:2.1.0")
 
     // Util
+    implementation("com.netflix.graphql.dgs:graphql-dgs-extended-scalars")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation("tools.jackson.module:jackson-module-kotlin")
 
     // Test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
@@ -69,6 +71,12 @@ kotlin {
     compilerOptions {
         freeCompilerArgs.addAll("-Xjsr305=strict", "-Xannotation-default-target=param-property")
     }
+}
+
+tasks.withType<com.netflix.graphql.dgs.codegen.gradle.GenerateJavaTask> {
+    schemaPaths = mutableListOf("$projectDir/src/main/resources/graphql")
+    packageName = "ru.leti.graphql"
+    generateClient = true
 }
 
 protobuf {

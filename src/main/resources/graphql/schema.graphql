@@ -1,0 +1,14 @@
+type Query {
+    getMyProfile: Profile!
+    getMyChats: [Chat]!
+    getChatMessages(chatId: String!): [Message]!
+}
+
+type Subscription {
+    subscribeToAnswer: Message,
+}
+
+type Mutation {
+    createNewChat: Chat!
+
+}

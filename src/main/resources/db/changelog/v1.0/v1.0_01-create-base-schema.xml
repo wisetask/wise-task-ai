@@ -7,39 +7,40 @@
 
     <changeSet id="create-base-tables" author="magofrays">
         <sql>
-            CREATE TABLE wise_task_ai.users (
+            CREATE TABLE profiles (
                 id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
                 email      VARCHAR(255) NOT NULL UNIQUE,
                 first_name VARCHAR(255),
                 last_name  VARCHAR(255)
             );
 
-            CREATE TABLE wise_task_ai.chat (
+            CREATE TABLE chat (
                 id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-                created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 title      VARCHAR(255) NOT NULL,
-                user_id    UUID NOT NULL
-                    CONSTRAINT user_foreign_key
-                        REFERENCES wise_task_ai.users(id) ON DELETE CASCADE
+                profile_id    UUID NOT NULL
+                    CONSTRAINT profiles_foreign_key
+                        REFERENCES profiles(id) ON DELETE CASCADE
             );
 
-            CREATE TABLE wise_task_ai.chat_message (
+            CREATE TABLE chat_message (
                 id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-                role       VARCHAR(127) NOT NULL,
-                content    TEXT,
+                message_type VARCHAR(127) NOT NULL,
+                payload    JSONB NOT NULL,
                 created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 chat_id    UUID NOT NULL
                     CONSTRAINT chat_foreign_key
-                        REFERENCES wise_task_ai.chat(id) ON DELETE CASCADE
+                        REFERENCES chat(id) ON DELETE CASCADE
             );
 
             CREATE INDEX chat_message_chat_created_idx
-                ON wise_task_ai.chat_message (chat_id, created_at);
+                ON chat_message (chat_id, created_at);
 
-            CREATE INDEX chat_user_created_idx
-                ON wise_task_ai.chat (user_id, created_at DESC);
+            CREATE INDEX chat_profile_created_idx
+                ON chat (profile_id, created_at DESC);
 
-            CREATE TABLE wise_task_ai.loaded_document (
+            CREATE TABLE loaded_document (
                 id            BIGSERIAL PRIMARY KEY,
                 filename      VARCHAR(255) NOT NULL,
                 content_hash  VARCHAR(64)  NOT NULL,
@@ -50,9 +51,9 @@
             );
 
             CREATE INDEX idx_loaded_documents_filename
-                ON wise_task_ai.loaded_document(filename);
+                ON loaded_document(filename);
 
-            CREATE TABLE wise_task_ai.vector_store (
+            CREATE TABLE vector_store (
                 id        VARCHAR(255) PRIMARY KEY,
                 content   TEXT,
                 metadata  JSON,
@@ -60,15 +61,15 @@
             );
 
             CREATE INDEX vector_store_hnsw_index
-                ON wise_task_ai.vector_store
+                ON vector_store
                 USING hnsw (embedding vector_cosine_ops);
         </sql>
         <rollback>
-            DROP TABLE IF EXISTS wise_task_ai.vector_store;
-            DROP TABLE IF EXISTS wise_task_ai.loaded_document;
-            DROP TABLE IF EXISTS wise_task_ai.chat_message;
-            DROP TABLE IF EXISTS wise_task_ai.chat;
-            DROP TABLE IF EXISTS wise_task_ai.users;
+            DROP TABLE IF EXISTS vector_store;
+            DROP TABLE IF EXISTS loaded_document;
+            DROP TABLE IF EXISTS chat_message;
+            DROP TABLE IF EXISTS chat;
+            DROP TABLE IF EXISTS profiles;
         </rollback>
     </changeSet>
 

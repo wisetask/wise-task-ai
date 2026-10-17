@@ -1,0 +1,28 @@
+scalar DateTime
+
+type Profile {
+    email: String,
+    first_name: String,
+    last_name: String
+}
+
+type Chat {
+    id: String,
+    title: String,
+    createdAt: DateTime,
+    updatedAt: DateTime
+    messages: [Message]
+}
+
+type Message {
+    type: MessageType,
+    payload: String,
+    createdAt: DateTime
+}
+
+enum MessageType {
+    ASSISTANT,
+    USER,
+    SYSTEM,
+    TOOL,
+}

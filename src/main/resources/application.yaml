@@ -1,7 +1,11 @@
 spring:
   ai:
-    deepseek:
-      api-key: ${API_KEY}
+    openai:
+      base-url: https://openrouter.ai/api/v1
+      api-key: ${OPENROUTER_API_KEY}
+      chat:
+        options:
+          model: xingchen-agi/xing4.0-29b-a4b:free
   threads:
     virtual:
       enabled: true
@@ -18,6 +22,18 @@ spring:
       properties:
         hibernate:
           format_sql: false
+  graphql:
+    graphiql:
+      enabled: true
+  liquibase:
+    url: jdbc:postgresql://${DB:localhost}:5432/${PROFILE_DB:wise_task_ai}
+    user: ${PROFILE_DB_USER:wise_task_ai}
+    password: ${PROFILE_DB_PASSWORD:wise_task_ai}
+    change-log: classpath:db/database-changelog.xml
+    enabled: true
+
+server:
+  port: 8055
 
 grpc:
   service:
