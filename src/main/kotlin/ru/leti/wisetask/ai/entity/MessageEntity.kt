@@ -16,7 +16,7 @@ class MessageEntity(
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "jsonb")
-    val payload: String,
+    val payload: Map<String, Any>,
 
     @Enumerated(value = EnumType.STRING)
     @Column("message_type")
@@ -33,7 +33,8 @@ class MessageEntity(
 
 fun MessageEntity.toMessage() = role.getMessage(payload)
 
-fun Message.toEtity() = MessageEntity(
+fun Message.toEntity(chat: ChatEntity) = MessageEntity(
     role = Role.getRole(messageType.value),
-    payload = text ?: ""
+    payload = mapOf("text" to (text ?: "")),
+    chat = chat
 )

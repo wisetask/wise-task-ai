@@ -1,11 +1,14 @@
 spring:
+  mvc:
+    async:
+      request-timeout: 10m
   ai:
     openai:
       base-url: https://openrouter.ai/api/v1
       api-key: ${OPENROUTER_API_KEY}
       chat:
         options:
-          model: nvidia/nemotron-3.5-super-vl:free
+          model: openrouter/free
   threads:
     virtual:
       enabled: true
@@ -78,3 +81,9 @@ management:
         http:
           server:
             requests: true
+
+logging:
+  level:
+    org.springframework.graphql: DEBUG
+    org.springframework.graphql.execution: TRACE
+    graphql: DEBUG

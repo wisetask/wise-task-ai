@@ -1,0 +1,4 @@
+input UserMessage{
+    chatId: String!,
+    content: String!,
+}

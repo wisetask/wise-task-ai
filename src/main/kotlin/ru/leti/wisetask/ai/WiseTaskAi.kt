@@ -13,20 +13,6 @@ class WiseTaskAi
 private val log = KotlinLogging.logger {}
 
 fun main(args: Array<String>) {
-    val application = runApplication<WiseTaskAi>(*args)
+    runApplication<WiseTaskAi>(*args)
     log.info { "WiseTaskAi started successfully" }
-    val chatModel = application.getBean(ChatModel::class.java)
-
-    val prompt = Prompt(UserMessage("Привет, что ты можешь рассказать про алгоритм Краскала?"))
-
-    chatModel.stream(prompt)
-        .doOnNext { response ->
-            val text = response.result?.output?.text
-            if (!text.isNullOrEmpty()) {
-                print(text)
-            }
-        }
-        .blockLast()
-
-    println()
 }

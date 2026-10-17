@@ -21,7 +21,7 @@ class DbChatMemory(
         conversationId: String,
         messages: List<Message>
     ) {
-        val chat = chatRepository.findById(UUID.fromString(conversationId))
+        val chat = chatRepository.findByIdWithHistory(UUID.fromString(conversationId))
             .orElseThrow { NotFoundException("Чат с id: $conversationId не найден") }
         messages.forEach { message ->
             chat.addChatMessage(message)

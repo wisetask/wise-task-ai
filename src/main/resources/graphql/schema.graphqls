@@ -5,7 +5,7 @@ type Query {
 }
 
 type Subscription {
-    subscribeToAnswer: Message,
+    sendMessage(message: UserMessage!): MessageChunk!,
 }
 
 type Mutation {

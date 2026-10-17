@@ -1,5 +1,6 @@
 package ru.leti.wisetask.ai.entity
 
+import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
@@ -32,13 +33,12 @@ class ChatEntity(
     @JoinColumn(name = "profile_id")
     val profile: ProfileEntity,
 
-    @OneToMany
-    @JoinColumn(name = "chat")
+    @OneToMany(mappedBy = "chat", cascade = [CascadeType.ALL], orphanRemoval = true)
     val history: MutableList<MessageEntity> = mutableListOf()
 
 ){
     fun addChatMessage(message: Message) {
-        history.add(message.toEtity())
+        history.add(message.toEntity(this))
     }
 
 }

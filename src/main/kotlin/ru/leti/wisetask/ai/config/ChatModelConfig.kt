@@ -31,7 +31,7 @@ class ChatModelConfig(
             .defaultSystem(systemPrompt)
             .defaultAdvisors { spec ->
                 AdvisorParams.ENABLE_NATIVE_STRUCTURED_OUTPUT.accept(spec)
-                spec.advisors(historyAdvisor())
+                spec.advisors(historyAdvisor(), ragAdvisor())
             }
             .defaultTools(pluginTools)
             .build()

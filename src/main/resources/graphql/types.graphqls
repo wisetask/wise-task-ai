@@ -14,7 +14,15 @@ type Chat {
     messages: [Message]
 }
 
+type MessageChunk {
+    chatId: String!
+    streamId: String!
+    delta: String!
+    done: Boolean!
+}
+
 type Message {
+    id: String!
     type: MessageType,
     payload: String,
     createdAt: DateTime
