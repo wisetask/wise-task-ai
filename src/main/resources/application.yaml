@@ -5,7 +5,7 @@ spring:
       api-key: ${OPENROUTER_API_KEY}
       chat:
         options:
-          model: xingchen-agi/xing4.0-29b-a4b:free
+          model: nvidia/nemotron-3.5-super-vl:free
   threads:
     virtual:
       enabled: true

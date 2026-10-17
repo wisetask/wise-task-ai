@@ -29,7 +29,7 @@ class ChatEntity(
     val updatedAt: OffsetDateTime = OffsetDateTime.now(),
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "profile_id")
     val profile: ProfileEntity,
 
     @OneToMany

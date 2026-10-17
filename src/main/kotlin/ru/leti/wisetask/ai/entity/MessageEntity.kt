@@ -8,7 +8,7 @@ import java.time.OffsetDateTime
 import java.util.*
 
 @Entity
-@Table(name = "message")
+@Table(name = "chat_message")
 class MessageEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -19,6 +19,7 @@ class MessageEntity(
     val payload: String,
 
     @Enumerated(value = EnumType.STRING)
+    @Column("message_type")
     val role: Role,
 
     @ManyToOne(fetch = FetchType.LAZY)

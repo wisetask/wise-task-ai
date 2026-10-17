@@ -28,6 +28,6 @@ class ProfileEntity(
     val lastName: String,
 
     @OneToMany(cascade = [CascadeType.ALL])
-    @JoinColumn(name = "user")
+    @JoinColumn(name = "profile")
     val chats: List<ChatEntity> = mutableListOf()
 )
