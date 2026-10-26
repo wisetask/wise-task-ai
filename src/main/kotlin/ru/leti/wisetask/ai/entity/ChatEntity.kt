@@ -9,6 +9,7 @@ import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.OneToMany
+import jakarta.persistence.OrderBy
 import jakarta.persistence.Table
 import org.springframework.ai.chat.messages.Message
 import java.time.OffsetDateTime
@@ -27,18 +28,20 @@ class ChatEntity(
     val createdAt: OffsetDateTime = OffsetDateTime.now(),
 
     @Column(name = "updated_at")
-    val updatedAt: OffsetDateTime = OffsetDateTime.now(),
+    var updatedAt: OffsetDateTime = OffsetDateTime.now(),
 
     @ManyToOne
     @JoinColumn(name = "profile_id")
     val profile: ProfileEntity,
 
     @OneToMany(mappedBy = "chat", cascade = [CascadeType.ALL], orphanRemoval = true)
+    @OrderBy("createdAt ASC")
     val history: MutableList<MessageEntity> = mutableListOf()
 
 ){
     fun addChatMessage(message: Message) {
         history.add(message.toEntity(this))
+        updatedAt = OffsetDateTime.now()
     }
 
 }

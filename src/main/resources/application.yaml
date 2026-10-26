@@ -14,6 +14,12 @@ spring:
       enabled: true
   application:
     name: wise-task-ai
+  data:
+    redis:
+      host: ${REDIS_APP_NAME:localhost}
+      port: ${REDIS_PORT:6379}
+  cache:
+    type: redis
   datasource:
     url: jdbc:postgresql://${DB:localhost}:5432/${AI_DB:wise_task_ai}
     username: ${AI_DB_USER:wise_task_ai}
@@ -28,15 +34,35 @@ spring:
   graphql:
     graphiql:
       enabled: true
+    http:
+      path: /ai
   liquibase:
-    url: jdbc:postgresql://${DB:localhost}:5432/${PROFILE_DB:wise_task_ai}
-    user: ${PROFILE_DB_USER:wise_task_ai}
-    password: ${PROFILE_DB_PASSWORD:wise_task_ai}
+    url: jdbc:postgresql://${DB:localhost}:${DB_PORT:5432}/${AI_DB:wise_task_ai}
+    user: ${AI_DB_USER:wise_task_ai}
+    password: ${AI_DB_PASSWORD:wise_task_ai}
     change-log: classpath:db/database-changelog.xml
     enabled: true
 
 server:
   port: 8055
+
+security:
+  jwt:
+    public-key: file:src/main/resources/certs/public.pem
+    issuer: wise-task
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173,http://localhost:3000,http://localhost:3150}
+    allowed-methods: ${CORS_ALLOWED_METHODS:GET,POST,PUT,DELETE,OPTIONS}
+    allowed-headers: "*"
+    allow-credentials: ${CORS_ALLOWED_CREDENTIALS:true}
+    max-age: ${CORS_MAX_AGE:3600}
+
+app:
+  cache:
+    ttl: 1h
+  oauth2:
+    trusted-issuers:
+      google-issuer: ${GOOGLE_ISSUER:https://accounts.google.com}
 
 grpc:
   service:

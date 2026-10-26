@@ -10,5 +10,4 @@ type Subscription {
 
 type Mutation {
     createNewChat: Chat!
-
 }

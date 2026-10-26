@@ -10,4 +10,6 @@ import java.util.*
 interface ChatRepository : JpaRepository<ChatEntity, UUID> {
     @Query("select c from ChatEntity c left join fetch c.history where c.id = :id")
     fun findByIdWithHistory(id: UUID): Optional<ChatEntity>
+
+    fun findAllByProfileId(profileId: UUID): List<ChatEntity>
 }

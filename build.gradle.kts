@@ -24,6 +24,14 @@ repositories {
 }
 
 dependencies {
+    // Security
+    implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
+
+    // Cache
+    implementation("org.springframework.boot:spring-boot-starter-data-redis")
+    implementation("org.springframework.boot:spring-boot-starter-cache")
+    implementation("com.github.ben-manes.caffeine:caffeine")
+
     // AI
     implementation("org.springframework.ai:spring-ai-starter-vector-store-pgvector")
     implementation("org.springframework.ai:spring-ai-rag")

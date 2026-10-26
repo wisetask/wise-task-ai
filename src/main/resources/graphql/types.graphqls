@@ -7,11 +7,11 @@ type Profile {
 }
 
 type Chat {
-    id: String,
-    title: String,
-    createdAt: DateTime,
-    updatedAt: DateTime
-    messages: [Message]
+    id: String!,
+    title: String!,
+    createdAt: DateTime!,
+    updatedAt: DateTime!
+    messages: [Message!]
 }
 
 type MessageChunk {
