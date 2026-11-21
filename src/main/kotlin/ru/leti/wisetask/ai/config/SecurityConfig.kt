@@ -5,25 +5,23 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
 import org.springframework.security.authentication.AuthenticationManagerResolver
-
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
-import org.springframework.security.config.annotation.web.socket.EnableWebSocketSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.oauth2.server.resource.authentication.JwtIssuerAuthenticationManagerResolver
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
+import ru.leti.wisetask.ai.config.security.IssuerAuthManagerProvider
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-@EnableWebSocketSecurity
 class SecurityConfig(
     private val corsProperties: CorsProperties,
-    private val multitenancyResolver: MultitenancyAuthenticationResolver
+    private val multitenancyProvider: IssuerAuthManagerProvider
 ) {
 
     @Bean
@@ -42,7 +40,7 @@ class SecurityConfig(
 
     @Bean
     fun authenticationManagerResolver(): AuthenticationManagerResolver<HttpServletRequest> {
-        return JwtIssuerAuthenticationManagerResolver(multitenancyResolver)
+        return JwtIssuerAuthenticationManagerResolver { issuer -> multitenancyProvider.provide(issuer) }
     }
 
     @Bean

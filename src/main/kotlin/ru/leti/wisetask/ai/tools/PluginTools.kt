@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service
 import ru.leti.wise.task.graph.GraphGrpc
 import ru.leti.wise.task.graph.GraphOuterClass
 import ru.leti.wise.task.graph.GraphServiceGrpc.GraphServiceBlockingStub
-import ru.leti.wise.task.pagination.Pagination
 import ru.leti.wise.task.pagination.Pagination.PaginationRequest
 import ru.leti.wise.task.plugin.PluginGrpc
 import ru.leti.wise.task.plugin.PluginGrpc.GetAllPluginRequest
