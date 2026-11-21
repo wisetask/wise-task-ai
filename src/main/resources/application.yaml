@@ -4,11 +4,10 @@ spring:
       request-timeout: 10m
   ai:
     openai:
-      base-url: https://openrouter.ai/api/v1
+      base-url: https://api.z.ai/api/coding/paas/v4
       api-key: ${OPENROUTER_API_KEY}
       chat:
-        options:
-          model: openrouter/free
+        model: glm-5.3
   threads:
     virtual:
       enabled: true
@@ -20,22 +19,27 @@ spring:
       port: ${REDIS_PORT:6379}
   cache:
     type: redis
+  jpa:
+    generate-ddl: false
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
   datasource:
     url: jdbc:postgresql://${DB:localhost}:5432/${AI_DB:wise_task_ai}
     username: ${AI_DB_USER:wise_task_ai}
     password: ${AI_DB_PASSWORD:wise_task_ai}
     driver-class-name: org.postgresql.Driver
-    jpa:
-      generate-ddl: false
-      show-sql: true
-      properties:
-        hibernate:
-          format_sql: false
   graphql:
     graphiql:
       enabled: true
     http:
       path: /ai
+    websocket:
+      path: /ai
+    cors:
+      allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173,http://localhost:3000,http://localhost:3150}
+      allowed-methods: ${CORS_ALLOWED_METHODS:GET,POST,OPTIONS}
   liquibase:
     url: jdbc:postgresql://${DB:localhost}:${DB_PORT:5432}/${AI_DB:wise_task_ai}
     user: ${AI_DB_USER:wise_task_ai}
@@ -113,3 +117,5 @@ logging:
     org.springframework.graphql: DEBUG
     org.springframework.graphql.execution: TRACE
     graphql: DEBUG
+    org.springframework.web.socket: DEBUG
+    root: info

@@ -1,5 +1,6 @@
 package ru.leti.wisetask.ai.controller
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.graphql.data.method.annotation.Argument
 import org.springframework.graphql.data.method.annotation.MutationMapping
 import org.springframework.graphql.data.method.annotation.QueryMapping
@@ -13,6 +14,8 @@ import ru.leti.graphql.types.MessageChunk
 import ru.leti.graphql.types.Profile
 import ru.leti.graphql.types.UserMessage
 import ru.leti.wisetask.ai.service.ChatService
+
+private val log = KotlinLogging.logger {}
 
 @Controller
 class ChatController(
@@ -41,6 +44,7 @@ class ChatController(
 
     @SubscriptionMapping
     fun sendMessage(@Argument message: UserMessage): Flux<MessageChunk> {
+        log.info { "User send message ${message.content}" }
         return chatService.sendMessage(message)
     }
 

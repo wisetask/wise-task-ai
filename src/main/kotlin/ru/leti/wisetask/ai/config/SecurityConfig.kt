@@ -9,6 +9,7 @@ import org.springframework.security.authentication.AuthenticationManagerResolver
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
+import org.springframework.security.config.annotation.web.socket.EnableWebSocketSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.oauth2.server.resource.authentication.JwtIssuerAuthenticationManagerResolver
 import org.springframework.security.web.SecurityFilterChain
@@ -19,6 +20,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
+@EnableWebSocketSecurity
 class SecurityConfig(
     private val corsProperties: CorsProperties,
     private val multitenancyResolver: MultitenancyAuthenticationResolver
@@ -50,7 +52,7 @@ class SecurityConfig(
             .authorizeHttpRequests { request ->
                 request
                     .requestMatchers("/ai", "/graphiql/**").permitAll()
-                    .requestMatchers("/actuator/prometheus", "/graphiql", "/actuator/health", "/actuator/health/**").permitAll()
+                    .requestMatchers("/actuator/prometheus", "/actuator/health", "/actuator/health/**").permitAll()
                     .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                     .anyRequest().authenticated()
             }

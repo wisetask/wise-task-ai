@@ -26,6 +26,7 @@ repositories {
 dependencies {
     // Security
     implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
+    implementation("org.springframework.security:spring-security-messaging")
 
     // Cache
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
@@ -39,6 +40,7 @@ dependencies {
 
     // API
     implementation("org.springframework.boot:spring-boot-starter-webmvc")
+    implementation("org.springframework.boot:spring-boot-websocket")
     implementation("org.springframework.boot:spring-boot-starter-graphql")
     implementation("org.springframework.boot:spring-boot-starter-grpc-client")
 

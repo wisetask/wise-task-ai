@@ -16,9 +16,8 @@ class StatisticsTools(
     }
 
     @Tool(description = "Получить долю успешных решений задач пользователем, значение от 0 до 1")
-    fun getUserSuccessRate(
-        @ToolParam(description = "id пользователя, если не указан берётся текущий пользователь", required = false) userId: String? = null
-    ): Double {
+    fun getUserSuccessRate(): Double {
+        val userId = SecurityUtils.getUserId()
         return getStatistic(
             type = Statistic.StatisticType.SUCCESS_RATE,
             scope = Statistic.StatisticScope.USER,
@@ -42,8 +41,8 @@ class StatisticsTools(
     @Tool(description = "Получить суммарное количество событий пользователя. Типы событий: submit, open_task, task_success, task_wrong, node_add, node_remove, node_color, node_value, edge_add, edge_remove")
     fun getUserEventSum(
         @ToolParam(description = "тип события, например task_success или node_add") eventType: String,
-        @ToolParam(description = "id пользователя, если не указан берётся текущий пользователь", required = false) userId: String? = null
     ): Double {
+        val userId = SecurityUtils.getUserId()
         return getStatistic(
             type = Statistic.StatisticType.SUM,
             scope = Statistic.StatisticScope.USER,
@@ -64,7 +63,7 @@ class StatisticsTools(
             .setScope(scope)
             .setEventType(eventType)
         if (scope == Statistic.StatisticScope.USER) {
-            builder.setUserId(userId ?: SecurityUtils.getUserIdOrAnonymous())
+            builder.setUserId(userId ?: SecurityUtils.getUserId())
         }
         if (taskId != null) {
             builder.setTaskId(taskId)
