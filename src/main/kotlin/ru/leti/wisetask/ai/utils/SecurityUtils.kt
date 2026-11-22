@@ -8,7 +8,13 @@ object SecurityUtils {
 
     fun getUserId(): String {
         val authentication = SecurityContextHolder.getContext().authentication
-        return (authentication?.principal as UserCredentials).id
+        val principal = authentication?.principal
+        if (principal !is UserCredentials) {
+            throw org.springframework.security.access.AccessDeniedException(
+                "Запрос не аутентифицирован пользователем WiseTask"
+            )
+        }
+        return principal.id
     }
 
     fun getUserIdOrAnonymous(): String {

@@ -1,18 +1,20 @@
 package ru.leti.wisetask.ai.tools
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.ai.tool.annotation.Tool
 import org.springframework.ai.tool.annotation.ToolParam
 import org.springframework.stereotype.Service
 import ru.leti.wise.task.graph.GraphGrpc
 import ru.leti.wise.task.graph.GraphOuterClass
 import ru.leti.wise.task.graph.GraphServiceGrpc.GraphServiceBlockingStub
-import ru.leti.wise.task.pagination.Pagination
 import ru.leti.wise.task.pagination.Pagination.PaginationRequest
 import ru.leti.wise.task.plugin.PluginGrpc
 import ru.leti.wise.task.plugin.PluginGrpc.GetAllPluginRequest
 import ru.leti.wise.task.plugin.PluginOuterClass
 import ru.leti.wise.task.plugin.PluginServiceGrpc.PluginServiceBlockingStub
 import ru.leti.wisetask.ai.utils.SecurityUtils
+
+private val log = KotlinLogging.logger {}
 
 @Service
 class PluginTools(
@@ -25,6 +27,7 @@ class PluginTools(
 
     @Tool(description = "Получение списка проверенных плагинов")
     fun getPluginNames(): List<PluginInfo> {
+        log.info{"Request for getting plugins"}
         val getAllPluginRequest = GetAllPluginRequest.newBuilder()
             .setFilter(
                 PluginGrpc.PluginFilter.newBuilder()
@@ -37,11 +40,13 @@ class PluginTools(
         val pluginsResponse = pluginService.getAllPlugins(
             getAllPluginRequest
         )
-        return pluginsResponse.itemsList.map { PluginInfo(
+        val plugins =  pluginsResponse.itemsList.map { PluginInfo(
             it.name,
             it.description,
             it.id
         ) }
+        log.info { "got some plugins $plugins" }
+        return plugins
     }
 
     @Tool(description = "Получить подробную информацию о плагине: описание, категория, тип")
